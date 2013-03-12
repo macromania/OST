@@ -602,7 +602,7 @@ public class CreateMapFrame extends javax.swing.JFrame {
             } else {
                 jTextFieldLanes.setBackground(Color.WHITE);
             }
-            if (lane_speed < 10 || lane_speed > 80 || (jTextFieldSpeed.getText() == null)) {
+            if (lane_speed < 10 || lane_speed > 99 || (jTextFieldSpeed.getText() == null)) {
                 jTextFieldSpeed.setBackground(Color.PINK);
                 errorMessages.add("Please check speed value!");
                 isValid = false;
@@ -755,7 +755,7 @@ public class CreateMapFrame extends javax.swing.JFrame {
         if (isSuccess) {            
             LightEditor.getInstance().networkFile = new Connector(ConnectorType.CONNECTOR_NETGENERATE).getOutputDir() + netgenerate_file + ".net.xml";
             this.setVisible(false);
-            new CreateSimulationFrame().setVisible(true);
+            CreateSimulationFrame.getInstance().setVisible(true);
         } else {
             if (isValid) {
                 JOptionPane.showMessageDialog(null, "The map creation has failed!");
@@ -814,7 +814,7 @@ public class CreateMapFrame extends javax.swing.JFrame {
             netgenerate_file = osmnet_file;
             LightEditor.getInstance().networkFile = new Connector(ConnectorType.CONNECTOR_NETGENERATE).getOutputDir() + netgenerate_file + ".net.xml";
             this.setVisible(false);
-            new CreateSimulationFrame().setVisible(true);
+            CreateSimulationFrame.getInstance().setVisible(true);
         } else {
            JOptionPane.showMessageDialog(null, "The map creation has failed!");
         }

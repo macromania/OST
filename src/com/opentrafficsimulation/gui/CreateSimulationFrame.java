@@ -38,11 +38,13 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
     private static List<Routes.Vehicle> lorryList = new ArrayList<Routes.Vehicle>();
     DefaultListModel model = new DefaultListModel();
     private boolean isTrafficGenerated = false;
+    
+    private static CreateSimulationFrame createSimulationFrame = new CreateSimulationFrame();
 
     /**
      * Creates new form CreateSimulationFrame
      */
-    public CreateSimulationFrame() {
+    private CreateSimulationFrame() {
         initComponents();
 
         PlainDocument doc = (PlainDocument) jTextFieldBegin.getDocument();
@@ -58,6 +60,10 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
         doc.setDocumentFilter(new InputFilterUtility());
 
 
+    }
+    
+    public static CreateSimulationFrame getInstance(){
+        return createSimulationFrame;
     }
 
     /**
@@ -713,8 +719,9 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
         jLabelLightCount.setText("You haven't created any traffic lights");
         jButtonGenerateLights.setEnabled(true);
-        jButtonReset.setEnabled(false);
+        jButtonReset.setEnabled(false);        
         LightEditor.getInstance().resetLights();
+        
     }//GEN-LAST:event_jButtonResetActionPerformed
 
     private void jButtonPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPreviewActionPerformed
@@ -755,7 +762,7 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
                 isValid = false;
                 JOptionPane.showMessageDialog(null, "Please enter positive numbers for simulation input values!");
             } else {
-                if (stepSize > 1000) {
+                if (stepSize > 10000) {
                     isValid = false;
                     JOptionPane.showMessageDialog(null, "Step size is too big! Please enter less or equal then 1000!");
                 }
