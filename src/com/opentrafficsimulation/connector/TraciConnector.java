@@ -41,13 +41,13 @@ public class TraciConnector {
 
 			for (int i = 0; i < SimulationScreen.SIMULATION_TIME; i++) {
 				int time = conn.getCurrentSimStep();
-				Set<String> vehicles = conn.getActiveVehicles();
+				/*Set<String> vehicles = conn.getActiveVehicles();
 
 				System.out.println("At time step " + time + ", there are "
 						+ vehicles.size() + " vehicles: " + vehicles);
-				Iterator<String> itr = vehicles.iterator();
+				Iterator<String> itr = vehicles.iterator();*/
 				
-				if(i == 5)
+				/*if(i == 5)
 				{
 					try {
 						
@@ -62,16 +62,16 @@ public class TraciConnector {
 						e.printStackTrace();
 					}
 					
-				}
+				}*/
 
-				if (itr.hasNext()) {
+				/*if (itr.hasNext()) {
 
 					while (itr.hasNext()) {
 						String vehicleID = itr.next();
 						Vehicle vhc = conn.getVehicle(vehicleID);
 						System.out.println(vhc.queryCurrentPosition2D());
 					}
-				}
+				}*/
 				conn.nextSimStep();
 
 			}

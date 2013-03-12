@@ -8,7 +8,22 @@ import com.opentrafficsimulation.connector.Connector;
 import com.opentrafficsimulation.connector.utility.ConnectorType;
 import com.opentrafficsimulation.editor.light.LightEditor;
 import com.opentrafficsimulation.gui.utility.AssetUtility;
+import com.opentrafficsimulation.gui.utility.InputFilterUtility;
+import com.opentrafficsimulation.screen.simulation.SimulationScreen;
+import com.opentrafficsimulation.utility.converter.Routes;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
+import javax.swing.text.PlainDocument;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 /**
  *
@@ -16,11 +31,33 @@ import javax.swing.SwingWorker;
  */
 public class CreateSimulationFrame extends javax.swing.JFrame {
 
+    private static String maxSpeed = "100";
+    private static List<Routes.Vehicle> privateList = new ArrayList<Routes.Vehicle>();
+    private static List<Routes.Vehicle> busList = new ArrayList<Routes.Vehicle>();
+    private static List<Routes.Vehicle> taxiList = new ArrayList<Routes.Vehicle>();
+    private static List<Routes.Vehicle> lorryList = new ArrayList<Routes.Vehicle>();
+    DefaultListModel model = new DefaultListModel();
+    private boolean isTrafficGenerated = false;
+
     /**
      * Creates new form CreateSimulationFrame
      */
     public CreateSimulationFrame() {
         initComponents();
+
+        PlainDocument doc = (PlainDocument) jTextFieldBegin.getDocument();
+        doc.setDocumentFilter(new InputFilterUtility());
+
+        doc = (PlainDocument) jTextFieldEnd.getDocument();
+        doc.setDocumentFilter(new InputFilterUtility());
+
+        doc = (PlainDocument) jTextFieldStepSize.getDocument();
+        doc.setDocumentFilter(new InputFilterUtility());
+
+        doc = (PlainDocument) jTextFieldNoOfVehicle.getDocument();
+        doc.setDocumentFilter(new InputFilterUtility());
+
+
     }
 
     /**
@@ -32,19 +69,20 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSeparator3 = new javax.swing.JSeparator();
         jPanel1 = new javax.swing.JPanel();
         jLabelEditVehicles = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jComboBoxVehicleType = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        listVehicles = new javax.swing.JList();
-        textFieldNoOfVehicle = new javax.swing.JTextField();
+        jListVehicles = new javax.swing.JList();
+        jTextFieldNoOfVehicle = new javax.swing.JTextField();
         buttonAdd = new javax.swing.JButton();
         buttonDelete = new javax.swing.JButton();
         buttonReset = new javax.swing.JButton();
         buttonCreate = new javax.swing.JButton();
-        buttonEdit = new javax.swing.JButton();
+        jSeparator4 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
         jLabelEditTrafficLights = new javax.swing.JLabel();
         jLabelLightCount = new javax.swing.JLabel();
@@ -73,20 +111,18 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
         jLabelEditVehicles.setBackground(new java.awt.Color(227, 225, 225));
         jLabelEditVehicles.setFont(new java.awt.Font("Arial", 0, 30)); // NOI18N
         jLabelEditVehicles.setForeground(new java.awt.Color(30, 15, 42));
-        jLabelEditVehicles.setText("Edit Vehicles");
+        jLabelEditVehicles.setText("Edit Traffic Intensity");
 
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         jLabel1.setText("Select Vehicle Type");
 
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         jLabel2.setText("Added Vehicles");
 
-        jComboBoxVehicleType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Private", "Bus", "Taxi", "Lorry" }));
+        jComboBoxVehicleType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Private", "Bus", "Lorry", "Taxi", " " }));
 
-        listVehicles.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "No vehicles added!" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(listVehicles);
+        jListVehicles.setModel(model);
+        jScrollPane1.setViewportView(jListVehicles);
 
         buttonAdd.setText("Add Vehicle");
         buttonAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -95,7 +131,7 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
             }
         });
 
-        buttonDelete.setText("Delete");
+        buttonDelete.setText(" Delete Selected");
         buttonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonDeleteActionPerformed(evt);
@@ -109,17 +145,10 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
             }
         });
 
-        buttonCreate.setText("Create");
+        buttonCreate.setText("Generate Vehicles");
         buttonCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonCreateActionPerformed(evt);
-            }
-        });
-
-        buttonEdit.setText("Edit");
-        buttonEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonEditActionPerformed(evt);
             }
         });
 
@@ -128,59 +157,57 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelEditVehicles)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jSeparator4)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel1)
-                                .addComponent(jComboBoxVehicleType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(textFieldNoOfVehicle))
-                            .addComponent(buttonAdd))
-                        .addGap(33, 33, 33)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(buttonCreate)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(buttonReset))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jComboBoxVehicleType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jTextFieldNoOfVehicle)
+                                    .addComponent(buttonAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(buttonDelete)
-                                    .addComponent(buttonEdit))))))
-                .addGap(0, 49, Short.MAX_VALUE))
+                                    .addComponent(jLabel2)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(buttonDelete, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
+                            .addComponent(jLabelEditVehicles)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(buttonCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(buttonReset, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(50, 50, 50)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabelEditVehicles)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addGap(5, 5, 5)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(buttonDelete)
+                        .addComponent(jComboBoxVehicleType, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(buttonEdit))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
+                        .addComponent(jTextFieldNoOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jComboBoxVehicleType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(textFieldNoOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(buttonAdd))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonCreate)
-                    .addComponent(buttonReset))
-                .addGap(28, 28, 28))
+                        .addComponent(buttonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addComponent(buttonDelete)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(buttonCreate, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addComponent(buttonReset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
 
         jLabelEditTrafficLights.setBackground(new java.awt.Color(227, 225, 225));
@@ -249,13 +276,13 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
         jLabelEndTime.setToolTipText("");
 
         jTextFieldEnd.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        jTextFieldEnd.setText("100");
+        jTextFieldEnd.setText("1000");
 
         jLabelStepSize.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         jLabelStepSize.setText("Step Size");
 
         jTextFieldStepSize.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        jTextFieldStepSize.setText("100");
+        jTextFieldStepSize.setText("1000");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -311,6 +338,11 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
         });
 
         jButtonRunSimulation.setText("Run The Simulation");
+        jButtonRunSimulation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRunSimulationActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -332,7 +364,7 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
                                 .addComponent(jSeparator2))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(94, 94, 94)
+                                .addGap(51, 51, 51)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(10, 10, 10))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -357,12 +389,30 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
                     .addComponent(jButtonEditMap, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                     .addComponent(jButtonRunSimulation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButtonPreview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void clearList() {
+        privateList.clear();
+        busList.clear();
+        lorryList.clear();
+        taxiList.clear();
+        model.removeAllElements();
+        System.gc();
+        isTrafficGenerated = false;
+    }
+
+    private void lockEditVehicles(boolean state) {
+        buttonAdd.setEnabled(state);
+        buttonCreate.setEnabled(state);
+        buttonDelete.setEnabled(state);
+        buttonReset.setEnabled(state);
+        jListVehicles.setEnabled(state);
+    }
 
     private void jButtonEditMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditMapActionPerformed
         this.setVisible(false);
@@ -370,23 +420,263 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonEditMapActionPerformed
 
     private void buttonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddActionPerformed
-        // TODO add your handling code here:
+
+
+
+        boolean isValid = true;
+        int numOfVehicles = 0;
+        if (jTextFieldNoOfVehicle.getText().length() < 1) {
+            isValid = false;
+            JOptionPane.showMessageDialog(null, "Please enter number of vehicles value!");
+        } else {
+
+            numOfVehicles = Integer.parseInt(jTextFieldNoOfVehicle.getText());
+
+            if (numOfVehicles <= 0) {
+
+                isValid = false;
+                JOptionPane.showMessageDialog(null, "Please enter a positive number for number of vehicles value!");
+            } else {
+                if (numOfVehicles > 1000) {
+                    isValid = false;
+                    JOptionPane.showMessageDialog(null, "You can only add 1000 vehicle at once! Please update you input.");
+                }
+            }
+        }
+
+        if (isValid) {
+
+            SwingWorker worker = new SwingWorker<String, Object>() {
+                @Override
+                public String doInBackground() {
+
+                    buttonAdd.setText("Generating...");
+                    lockEditVehicles(false);
+
+                    String net = CreateMapFrame.getInstance().netgenerate_file + ".net.xml";
+
+                    Connector connector = new Connector(ConnectorType.CONNECTOR_PYTHON);
+
+                    String Option;
+                    {
+                        Option = connector.getToolsDir() + "sumolib\\trip\\randomTrips.py -n " + connector.getOutputDir() + net;
+                        Option += " -e " + jTextFieldNoOfVehicle.getText() + " -l";
+                        Option += " -o " + connector.getOutputDir() + CreateMapFrame.getInstance().netgenerate_file + ".trips.xml";
+                        connector.runCommand(Option);
+
+                    }
+
+                    Connector connectorRouter = new Connector(ConnectorType.CONNECTOR_ROUTER);
+                    String Options1;
+                    {
+                        Options1 = "-n " + connectorRouter.getOutputDir();
+                        Options1 += net;
+                        Options1 += " -t " + connectorRouter.getOutputDir() + CreateMapFrame.getInstance().netgenerate_file + ".trips.xml";
+                        Options1 += " -o " + connectorRouter.getOutputDir() + CreateMapFrame.getInstance().netgenerate_file + "Old.rou.xml";
+                        connectorRouter.runCommand(Options1);
+                    }
+
+                    model.removeAllElements();
+
+                    // create JAXB context and instantiate marshaller
+                    JAXBContext context;
+                    try {
+
+                        context = JAXBContext.newInstance(Routes.class);
+                        javax.xml.bind.Unmarshaller m = context.createUnmarshaller();
+                        Routes bookstore2 = (Routes) m.unmarshal(new FileReader(connectorRouter.getOutputDir() + CreateMapFrame.getInstance().netgenerate_file + "Old.rou.xml"));
+                        List<Routes.Vehicle> list = bookstore2.getVehicle();
+
+                        for (Routes.Vehicle vehicle : list) {
+
+                            vehicle.setMaxSpeed(maxSpeed);
+                            String vehicleType = "";
+                            if (jComboBoxVehicleType.getSelectedIndex() == 0) {
+                                vehicle.setVehicleType("Private");
+                                privateList.add(vehicle);
+                            } else if (jComboBoxVehicleType.getSelectedIndex() == 1) {
+                                vehicle.setVehicleType("Bus");
+                                busList.add(vehicle);
+                            } else if (jComboBoxVehicleType.getSelectedIndex() == 2) {
+                                vehicle.setVehicleType("Lorry");
+                                lorryList.add(vehicle);
+                            } else if (jComboBoxVehicleType.getSelectedIndex() == 3) {
+                                vehicle.setVehicleType("Taxi");
+                                taxiList.add(vehicle);
+                            }
+                        }
+
+                        if (privateList.size() > 0) {
+                            model.addElement("Private = " + privateList.size());
+                        }
+
+                        if (busList.size() > 0) {
+                            model.addElement("Bus = " + busList.size());
+                        }
+
+                        if (lorryList.size() > 0) {
+                            model.addElement("Lorry = " + lorryList.size());
+                        }
+
+                        if (taxiList.size() > 0) {
+                            model.addElement("Taxi = " + taxiList.size());
+                        }
+
+                        jTextFieldNoOfVehicle.setText("");
+
+                    } catch (JAXBException e) {
+                        e.printStackTrace();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    return "running";
+                }
+
+                @Override
+                public void done() {
+
+                    buttonAdd.setText("Add Vehicle");
+                    lockEditVehicles(true);
+                }
+            };
+
+            worker.execute();
+
+
+
+
+        }
     }//GEN-LAST:event_buttonAddActionPerformed
 
     private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
-        // TODO add your handling code here:
+
+        ListSelectionModel selmodel = jListVehicles.getSelectionModel();
+        int index = selmodel.getMinSelectionIndex();
+        if (index >= 0) {
+
+            String value = (String) model.get(index);
+
+            if (value.contains("Private")) {
+                privateList.clear();
+            }
+
+            if (value.contains("Bus")) {
+                busList.clear();
+            }
+
+            if (value.contains("Taxi")) {
+                taxiList.clear();
+            }
+
+            if (value.contains("Lorry")) {
+                lorryList.clear();
+            }
+
+            model.remove(index);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Select a value from the list to delete");
+        }
     }//GEN-LAST:event_buttonDeleteActionPerformed
 
-    private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonEditActionPerformed
-
     private void buttonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResetActionPerformed
-        // TODO add your handling code here:
+        clearList();
+
     }//GEN-LAST:event_buttonResetActionPerformed
 
     private void buttonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateActionPerformed
-        // TODO add your handling code here:
+
+        boolean isValid = true;
+
+
+        int index = model.getSize();
+        if (index <= 0) {
+            isValid = false;
+        }
+
+        if (isValid) {
+
+            SwingWorker worker = new SwingWorker<String, Object>() {
+                @Override
+                public String doInBackground() {
+                    buttonCreate.setText("Generating...");
+                    lockEditVehicles(false);
+                    Connector connector = new Connector(null);
+                    List<Routes.Vehicle> commonList = new ArrayList<Routes.Vehicle>();
+                    int i = 0;
+
+                    for (Routes.Vehicle privateVehicle : privateList) {
+                        privateVehicle.setId(Integer.toString(i));
+                        privateVehicle.setDepart(Integer.toString(i) + ".00");
+                        commonList.add(privateVehicle);
+                        i++;
+                    }
+
+                    for (Routes.Vehicle bus : busList) {
+
+                        bus.setId(Integer.toString(i));
+                        bus.setDepart(Integer.toString(i) + ".00");
+                        commonList.add(bus);
+                        i++;
+                    }
+
+                    for (Routes.Vehicle lorry : lorryList) {
+
+                        lorry.setId(Integer.toString(i));
+                        lorry.setDepart(Integer.toString(i) + ".00");
+                        commonList.add(lorry);
+                        i++;
+                    }
+
+                    for (Routes.Vehicle taxi : taxiList) {
+
+                        taxi.setId(Integer.toString(i));
+                        taxi.setDepart(Integer.toString(i) + ".00");
+                        commonList.add(taxi);
+                        i++;
+                    }
+
+                    try {
+
+                        // create JAXB context and instantiate marshaller
+                        JAXBContext context = JAXBContext.newInstance(Routes.class);
+                        Marshaller m = context.createMarshaller();
+                        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+                        Routes route = new Routes();
+                        route.getVehicle().addAll(commonList);
+
+                        // Write to System.out
+                        m.marshal(route, System.out);
+
+                        // Write to File
+                        m.marshal(route, new File(connector.getOutputDir() + CreateMapFrame.getInstance().netgenerate_file + ".rou.xml"));
+                        //clearList();
+
+                        JOptionPane.showMessageDialog(null, "Vehicles genereated successfully");
+
+                        isTrafficGenerated = true;
+
+                    } catch (JAXBException e) {
+                        System.out.println("Exception Occured");
+                        JOptionPane.showMessageDialog(null, "An exception has been occured! Please try again later.");
+                    }
+                    return "running";
+                }
+
+                @Override
+                public void done() {
+                    buttonCreate.setText("Generate Vehicles");
+                    lockEditVehicles(true);
+                }
+            };
+
+            worker.execute();
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Please add vehicles!");
+        }
+
     }//GEN-LAST:event_buttonCreateActionPerformed
 
     private void jButtonGenerateLightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenerateLightsActionPerformed
@@ -419,11 +709,11 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonResetActionPerformed
 
     private void jButtonPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPreviewActionPerformed
-        
+
         SwingWorker worker = new SwingWorker<String, Object>() {
             @Override
             public String doInBackground() {
-                
+
                 Connector connector = new Connector(ConnectorType.CONNECTOR_SUMO_GUI);
                 String options;
                 options = " --net-file=" + connector.getOutputDir() + CreateMapFrame.getInstance().netgenerate_file + ".net.xml";
@@ -433,13 +723,61 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
 
             @Override
             public void done() {
-                
-                
             }
         };
 
         worker.execute();
     }//GEN-LAST:event_jButtonPreviewActionPerformed
+
+    private void jButtonRunSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunSimulationActionPerformed
+
+        boolean isValid = true;
+
+        if (jTextFieldBegin.getText().length() < 1 || jTextFieldEnd.getText().length() < 1 || jTextFieldStepSize.getText().length() < 1) {
+            isValid = false;
+            JOptionPane.showConfirmDialog(null, "Please set simulation input values!");
+        } else {
+
+            int begin = Integer.parseInt(jTextFieldBegin.getText());
+            int end = Integer.parseInt(jTextFieldEnd.getText());
+            int stepSize = Integer.parseInt(jTextFieldStepSize.getText());
+
+            if (end <= 0 || stepSize <= 0) {
+                isValid = false;
+                JOptionPane.showMessageDialog(null, "Please enter positive numbers for simulation input values!");
+            } else {
+                if (stepSize > 1000) {
+                    isValid = false;
+                    JOptionPane.showMessageDialog(null, "Step size is too big! Please enter less or equal then 1000!");
+                }
+
+                if (end > stepSize) {
+                    isValid = false;
+                    JOptionPane.showMessageDialog(null, "End time couldn't be bigger then step size!");
+                }
+
+                if (begin >= end) {
+                    isValid = false;
+                    JOptionPane.showMessageDialog(null, "Please enter begin time as smaller then end time!");
+                }
+
+
+
+                if (isValid) {
+
+                    if (isTrafficGenerated) {
+                        SimulationScreen.SIMULATION_BEGIN = begin;
+                        SimulationScreen.SIMULATION_END = end;
+                        SimulationScreen.SIMULATION_TIME = stepSize;
+                        SimulationScreen.getInstance().runSimulation();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please generate traffic by clicking Generate Vehicles button.");
+                    }
+
+                }
+            }
+        }
+    }//GEN-LAST:event_jButtonRunSimulationActionPerformed
 
     /**
      * @param args the command line arguments
@@ -479,7 +817,6 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonAdd;
     private javax.swing.JButton buttonCreate;
     private javax.swing.JButton buttonDelete;
-    private javax.swing.JButton buttonEdit;
     private javax.swing.JButton buttonReset;
     private javax.swing.JButton jButtonEditMap;
     private javax.swing.JButton jButtonGenerateLights;
@@ -496,16 +833,18 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelEndTime;
     private javax.swing.JLabel jLabelLightCount;
     private javax.swing.JLabel jLabelStepSize;
+    private javax.swing.JList jListVehicles;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTextField jTextFieldBegin;
     private javax.swing.JTextField jTextFieldEnd;
+    private javax.swing.JTextField jTextFieldNoOfVehicle;
     private javax.swing.JTextField jTextFieldStepSize;
-    private javax.swing.JList listVehicles;
-    private javax.swing.JTextField textFieldNoOfVehicle;
     // End of variables declaration//GEN-END:variables
 }

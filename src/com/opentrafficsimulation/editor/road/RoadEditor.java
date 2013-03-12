@@ -13,7 +13,6 @@ import com.opentrafficsimulation.connector.Connector;
 import com.opentrafficsimulation.connector.utility.ConnectorType;
 import com.opentrafficsimulation.editor.MainEditor;
 import com.opentrafficsimulation.editor.light.LightEditor;
-import com.opentrafficsimulation.editor.vehicle.VehicleEditor;
 import com.opentrafficsimulation.utility.constants.AppConstants;
 import com.opentrafficsimulation.utility.content.AppFont;
 import com.opentrafficsimulation.utility.content.AppText;
@@ -613,7 +612,7 @@ public class RoadEditor extends JPanel {
         // show light and vehicle editor after creating the map by mahmut on
         // 10/03/13
         LightEditor.getInstance().setVisible(true);
-        VehicleEditor.getInstance().setVisible(true);
+        //VehicleEditor.getInstance().setVisible(true);
         MainEditor.getInstance().runSimulation.setVisible(true);
 
     }

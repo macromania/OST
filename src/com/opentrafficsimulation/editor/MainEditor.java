@@ -9,12 +9,9 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import com.opentrafficsimulation.editor.light.LightEditor;
 import com.opentrafficsimulation.editor.road.RoadEditor;
-import com.opentrafficsimulation.editor.vehicle.VehicleEditor;
 import com.opentrafficsimulation.screen.simulation.SimulationScreen;
 import com.opentrafficsimulation.utility.constants.AppConstants;
 
@@ -94,13 +91,13 @@ public class MainEditor extends JFrame {
 		/*VehicleEditorAdd.getInstance().init();
 		pane.add(VehicleEditorAdd.getInstance());*/
 		
-		try {
+		/*try {
 			VehicleEditor.getInstance().init();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		pane.add(VehicleEditor.getInstance());
+		pane.add(VehicleEditor.getInstance());*/
 
 		
 		
@@ -109,7 +106,7 @@ public class MainEditor extends JFrame {
 		
 		// Hide light and vehicle editor before creating the map by mahmut on 10/03/13
 		LightEditor.getInstance().setVisible(false);
-		VehicleEditor.getInstance().setVisible(false);
+		//VehicleEditor.getInstance().setVisible(false);
 		runSimulation.setVisible(false);
 		setVisible(true);
 		
