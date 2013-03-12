@@ -146,6 +146,10 @@ public class Routes {
         protected String maxSpeed;
         @XmlAttribute(name="vType")
         protected String vehicleType;
+        @XmlAttribute(name="color")
+        private String color;
+        @XmlAttribute(name="guiShape")
+        private String guiShape;
 
         /**
          * Gets the value of the route property.
@@ -265,6 +269,34 @@ public class Routes {
          */
         public void setVehicleType(String value) {
             this.vehicleType = value;
+        }
+
+        /**
+         * @return the color
+         */
+        public String getColor() {
+            return color;
+        }
+
+        /**
+         * @param color the color to set
+         */
+        public void setColor(String color) {
+            this.color = color;
+        }
+
+        /**
+         * @return the guiShape
+         */
+        public String getGuiShape() {
+            return guiShape;
+        }
+
+        /**
+         * @param guiShape the guiShape to set
+         */
+        public void setGuiShape(String guiShape) {
+            this.guiShape = guiShape;
         }
 
 

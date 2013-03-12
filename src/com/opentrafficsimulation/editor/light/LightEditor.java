@@ -27,6 +27,7 @@ import javax.swing.event.ListSelectionListener;
 import com.opentrafficsimulation.connector.Connector;
 import com.opentrafficsimulation.connector.utility.ConnectorType;
 import com.opentrafficsimulation.editor.road.RoadEditor;
+import com.opentrafficsimulation.gui.CreateMapFrame;
 import com.opentrafficsimulation.screen.simulation.SimulationScreen;
 import com.opentrafficsimulation.utility.constants.AppConstants;
 
@@ -163,6 +164,11 @@ public class LightEditor extends JPanel {
             //JOptionPane.showMessageDialog(null, "Created " + randomIds.size() + " traffic lights");
         }
     }
+    
+    public void resetLights(){
+        //trafficLightIDs = null;
+        CreateMapFrame.getInstance().createMap();
+    }
 
     private void clearLists() {
         tlModel.clear();
@@ -246,7 +252,11 @@ public class LightEditor extends JPanel {
         List<Junction> filteredJunctions = new ArrayList<Junction>();
         for (Junction junction : junctions) {
             if (!"traffic_light".equals(junction.getType())) {
-                filteredJunctions.add(junction);
+                String t = junction.getType();
+                if (!t.equals("internal")) {
+                    filteredJunctions.add(junction);
+                }
+                
             }
         }
 

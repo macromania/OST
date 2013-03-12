@@ -4,7 +4,9 @@
  */
 package ostGUI;
 
+import com.opentrafficsimulation.connector.Connector;
 import com.opentrafficsimulation.gui.MainFrame;
+import com.opentrafficsimulation.utility.data.DBConnector;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -60,6 +62,10 @@ public class Main {
 
                 new MainFrame().setVisible(true);
             }
+            
+            
+            
+            
         });
     }
 }

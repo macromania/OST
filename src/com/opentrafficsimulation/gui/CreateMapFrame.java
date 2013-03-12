@@ -560,8 +560,8 @@ public class CreateMapFrame extends javax.swing.JFrame {
         updateTypes();
     }//GEN-LAST:event_jComboBoxTypeActionPerformed
 
-    private void jButtonCreateMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateMapActionPerformed
-
+    public void createMap(){
+        
         String Options = "";
         String pattern = "[0-9A-Za-z]*";
         boolean isSuccess = false;
@@ -611,7 +611,7 @@ public class CreateMapFrame extends javax.swing.JFrame {
             }
 
         }
-
+        
         // Check selected type
         if (jComboBoxType.getSelectedIndex() == 0) {
 
@@ -762,6 +762,10 @@ public class CreateMapFrame extends javax.swing.JFrame {
             }
 
         }
+    }
+    private void jButtonCreateMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateMapActionPerformed
+
+       createMap();
     }//GEN-LAST:event_jButtonCreateMapActionPerformed
 
     

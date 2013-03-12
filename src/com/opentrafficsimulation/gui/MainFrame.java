@@ -11,6 +11,9 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import com.opentrafficsimulation.gui.utility.AssetUtility;
+import com.opentrafficsimulation.utility.data.DBConnector;
+import com.opentrafficsimulation.utility.data.queryExample;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -18,23 +21,35 @@ import com.opentrafficsimulation.gui.utility.AssetUtility;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    
-    
     /**
      * Creates new form MainFrame
      */
-    public MainFrame() { 
+    public MainFrame() {
+
+        /*SwingWorker worker = new SwingWorker<String, Object>() {
+            @Override
+            public String doInBackground() {
+                // DB Connection test
+                System.out.println("connecting to db");
+                DBConnector connector = new DBConnector();
+                connector.connector();
+                queryExample.getInstance().query();
+                return "running";
+            }
+
+            @Override
+            public void done() {
+            }
+        };
         
-        
-        
-        // TODO: Load image
-        /*try {
-            String filename = this.getClass().getResource("/assets/IconImage.jpg").getFile().replaceFirst("/", "");
-            ImageIcon imgThisImg = new ImageIcon(filename);
-            jLabelLogo.setIcon(imgThisImg);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
+        worker.execute();*/
+                /*try {
+                 String filename = this.getClass().getResource("/assets/IconImage.jpg").getFile().replaceFirst("/", "");
+                 ImageIcon imgThisImg = new ImageIcon(filename);
+                 jLabelLogo.setIcon(imgThisImg);
+                 } catch (Exception e) {
+                 e.printStackTrace();
+                 }*/
         initComponents();
     }
 
@@ -154,11 +169,9 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCreateMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateMapActionPerformed
-            this.setVisible(false);
-            CreateMapFrame.getInstance().setVisible(true);
+        this.setVisible(false);
+        CreateMapFrame.getInstance().setVisible(true);
     }//GEN-LAST:event_jButtonCreateMapActionPerformed
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCreateMap;
     private javax.swing.JLabel jLabelConceptText;

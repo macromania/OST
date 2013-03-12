@@ -608,6 +608,8 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
                     for (Routes.Vehicle privateVehicle : privateList) {
                         privateVehicle.setId(Integer.toString(i));
                         privateVehicle.setDepart(Integer.toString(i) + ".00");
+                        privateVehicle.setColor("0,180,255");
+                        privateVehicle.setGuiShape("evehicle");
                         commonList.add(privateVehicle);
                         i++;
                     }
@@ -616,6 +618,8 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
 
                         bus.setId(Integer.toString(i));
                         bus.setDepart(Integer.toString(i) + ".00");
+                        bus.setColor("255,0,0");
+                        bus.setGuiShape("bus");
                         commonList.add(bus);
                         i++;
                     }
@@ -624,6 +628,8 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
 
                         lorry.setId(Integer.toString(i));
                         lorry.setDepart(Integer.toString(i) + ".00");
+                        lorry.setColor("132,255,0");
+                        lorry.setGuiShape("trailer");
                         commonList.add(lorry);
                         i++;
                     }
@@ -632,6 +638,8 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
 
                         taxi.setId(Integer.toString(i));
                         taxi.setDepart(Integer.toString(i) + ".00");
+                        taxi.setColor("138,138,138");
+                        taxi.setGuiShape("bicycle");
                         commonList.add(taxi);
                         i++;
                     }
@@ -692,7 +700,7 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
 
             @Override
             public void done() {
-                jLabelLightCount.setText(LightEditor.getInstance().trafficLightIDs.size() + " traffic lights created!");
+                jLabelLightCount.setText(LightEditor.getInstance().trafficLightIDs.size() + " junctions have traffic lights created!");
                 System.out.println("generation completed");
                 jButtonGenerateLights.setText("Generate Traffic Lights");
                 jButtonReset.setEnabled(true);
@@ -706,6 +714,7 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
         jLabelLightCount.setText("You haven't created any traffic lights");
         jButtonGenerateLights.setEnabled(true);
         jButtonReset.setEnabled(false);
+        LightEditor.getInstance().resetLights();
     }//GEN-LAST:event_jButtonResetActionPerformed
 
     private void jButtonPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPreviewActionPerformed
