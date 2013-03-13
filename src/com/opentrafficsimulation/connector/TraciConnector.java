@@ -10,76 +10,69 @@ import org.apache.log4j.BasicConfigurator;
 
 import com.opentrafficsimulation.editor.light.LightEditor;
 import com.opentrafficsimulation.editor.light.ReadTrafficLightState;
+import com.opentrafficsimulation.editor.light.TrafficLighStateWindow;
 import com.opentrafficsimulation.screen.simulation.SimulationScreen;
 
 public class TraciConnector {
-	
-	public SumoTraciConnection conn;
 
-	public void runSimulation(String conf){
-		System.out.println("Running a new simulation using config file " + conf);
-		
-		BasicConfigurator.configure();
-		
-		conn = new SumoTraciConnection(
-				conf,  									// config file
-				12345,                                 	// random seed
-				false                                  	// look for geolocalization info in the map
-				);
-		
-		try {
-			conn.runServer();
-			
-			
-			
-			LightEditor.getInstance().isSimulationRunnig = true;
-			LightEditor.getInstance().PORT_NUMBER = SimulationScreen.getInstance().portNumber;
-			
-			
-			
-			System.out.println("Map bounds are: " + conn.queryBounds());
+    public SumoTraciConnection conn;
+    // Required for LightEditor
+    public static ReadTrafficLightState RTL;
+    public static String TLID = null;
+    public static String CHGID = null;
+    public static String CHGSTATE = null;
+    public static String GOTO_JUNCTION = null;
 
-			for (int i = 0; i < SimulationScreen.SIMULATION_TIME; i++) {
-				int time = conn.getCurrentSimStep();
-				/*Set<String> vehicles = conn.getActiveVehicles();
+    public void runSimulation(String conf) {
+        System.out.println("Running a new simulation using config file " + conf);
 
-				System.out.println("At time step " + time + ", there are "
-						+ vehicles.size() + " vehicles: " + vehicles);
-				Iterator<String> itr = vehicles.iterator();*/
-				
-				/*if(i == 5)
-				{
-					try {
-						
-						ReadTrafficLightState r = new ReadTrafficLightState(conn.socket);
-						String id = LightEditor.getInstance().trafficLightIDs.get(0);
-						System.out.println("Connecting to traffic light:" + id);
-						r.readTLState(id);
-						r.chageTLState(id, "RGRGRG");
-						r.readTLState(id);
-						
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					
-				}*/
+        BasicConfigurator.configure();
 
-				/*if (itr.hasNext()) {
+        conn = new SumoTraciConnection(
+                conf, // config file
+                12345, // random seed
+                false // look for geolocalization info in the map
+                );
 
-					while (itr.hasNext()) {
-						String vehicleID = itr.next();
-						Vehicle vhc = conn.getVehicle(vehicleID);
-						System.out.println(vhc.queryCurrentPosition2D());
-					}
-				}*/
-				conn.nextSimStep();
+        try {
+            conn.runServer();
 
-			}
+            RTL = new ReadTrafficLightState(conn.socket);
 
-			conn.close();
-		} catch (Exception e) {
-			LightEditor.getInstance().isSimulationRunnig = false;
-			e.printStackTrace();
-		}
-	}
+            LightEditor.getInstance().isSimulationRunnig = true;
+            LightEditor.getInstance().PORT_NUMBER = SimulationScreen.getInstance().portNumber;
+
+
+
+            //System.out.println("Map bounds are: " + conn.queryBounds());
+
+            for (int i = 0; i < SimulationScreen.SIMULATION_TIME; i++) {
+                int time = conn.getCurrentSimStep();
+
+                if (CHGID != null) {
+                    RTL.chageTLState(CHGID, CHGSTATE);
+                    CHGID = null;
+                }
+
+                if (TLID != null) {
+                    //new TrafficLighStateWindow(TLID);
+                    SimulationScreen.getInstance().edt.openEditor(TLID);
+                    TLID = null;
+                }
+
+                if (GOTO_JUNCTION != null) {
+                    RTL.goToJunction(GOTO_JUNCTION);
+                    GOTO_JUNCTION = null;
+                }
+
+                conn.nextSimStep();
+
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            LightEditor.getInstance().isSimulationRunnig = false;
+            e.printStackTrace();
+        }
+    }
 }

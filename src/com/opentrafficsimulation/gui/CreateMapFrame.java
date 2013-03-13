@@ -755,7 +755,9 @@ public class CreateMapFrame extends javax.swing.JFrame {
         if (isSuccess) {            
             LightEditor.getInstance().networkFile = new Connector(ConnectorType.CONNECTOR_NETGENERATE).getOutputDir() + netgenerate_file + ".net.xml";
             this.setVisible(false);
+            
             CreateSimulationFrame.getInstance().setVisible(true);
+            CreateSimulationFrame.getInstance().createJunctions();
         } else {
             if (isValid) {
                 JOptionPane.showMessageDialog(null, "The map creation has failed!");

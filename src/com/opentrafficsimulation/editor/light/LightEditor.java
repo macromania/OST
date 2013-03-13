@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -43,9 +44,9 @@ public class LightEditor extends JPanel {
     public String networkFile; // Added by mahmut on 10.03.13
     public static Integer PORT_NUMBER = 5443; // Added by mahmut on 11.03.13
     //public int PORT_NUMBER;
-    private DefaultListModel junctionModel = new DefaultListModel();
+    public DefaultListModel junctionModel = new DefaultListModel();
     private JList junctionList = new JList(junctionModel);
-    private DefaultListModel tlModel = new DefaultListModel();
+    public DefaultListModel tlModel = new DefaultListModel();
     private JList tlList = new JList(tlModel);
     public List<String> trafficLightIDs; // Added by mahmut on 11.03.13
     public boolean isSimulationRunnig = false;
@@ -154,25 +155,44 @@ public class LightEditor extends JPanel {
     };
 
     public void triggerGeneration() {
-        ArrayList<Junction> idList = new TrafficLightReader().readNetworkFile(networkFile);
-        List<String> randomIds = getRandomJunctions(idList);
-        trafficLightIDs = randomIds;
-        createTrafficLights(randomIds);
-        if (randomIds.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Could not find any junctions that could be converted into traffic lights");
-        } else {
-            //JOptionPane.showMessageDialog(null, "Created " + randomIds.size() + " traffic lights");
-        }
+        readNetworkFile();
     }
-    
-    public void resetLights(){
+
+    public void resetLights() {
         //trafficLightIDs = null;
+        tlModel = new DefaultListModel();
+        junctionModel = new DefaultListModel();
         CreateMapFrame.getInstance().createMap();
     }
 
-    private void clearLists() {
-        tlModel.clear();
+    public void convertToTrafficLight(String id) {
+
+        /*if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null, "Do you want to add traffic light to this junction?")) {
+            if (isSimulationRunnig) {
+                JOptionPane.showMessageDialog(null, "Please note that the changes will not be reflected during this simulation");
+            }
+            System.out.println("Converting junction " + id + " to traffic light");
+            createTrafficLights(Arrays.asList(id));
+            // Refresh data from the network file
+            readNetworkFile();
+        }*/
+        createTrafficLights(Arrays.asList(id));
+            // Refresh data from the network file
+            readNetworkFile();
+    }
+
+    public void removeTrafficLight(String id) {
+        removeTrafficLights(Arrays.asList(id));
+        JOptionPane.showMessageDialog(null, "Traffic light with ID " + id + " has been removed");
+        readNetworkFile();
+    }
+
+    private void clearLists() {        
+        tlModel.clear();        
         junctionModel.clear();
+        System.out.println("Tlight" + tlModel);
+        System.out.println("Junc" + junctionModel);
+        System.out.println("---");
     }
     private ActionListener convertButtonListener = new ActionListener() {
         @Override
@@ -220,21 +240,33 @@ public class LightEditor extends JPanel {
     };
 
     public void showTLOnSummoGUI(String id) throws UnknownHostException, IOException {
-        if (isSimulationRunnig) {
-            Socket socket = new Socket("localhost", 3445);
-            new ReadTrafficLightState(socket).goToTrafficLight(id);
-        }
+        /*if (isSimulationRunnig) {
+         Socket socket = new Socket("localhost", 3445);
+         new ReadTrafficLightState(socket).goToTrafficLight(id);
+         }*/
     }
 
+    /*
+     * Populates the junction and traffic light tables from the network file.
+     */
     public void readNetworkFile() {
-        clearLists();
-        ArrayList<Junction> idList = new TrafficLightReader().readNetworkFile(networkFile);
-        for (final Junction junction : idList) {
-            if (junction.getType().equals("traffic_light")) {
-                tlModel.addElement(junction.getId());
-            } else {
-                junctionModel.addElement(junction.getId());
+        if (networkFile == null || "".equals(networkFile)) {
+            System.out.println("Network file is empy, cannot refresh junction and traffic light list");
+        } else {
+            System.out.println("Reading network file " + networkFile + ", refreshing junction and traffic light list");
+            clearLists();
+            ArrayList<Junction> idList = new TrafficLightReader().readNetworkFile(networkFile);
+            for (final Junction junction : idList) {
+                String t = junction.getType();
+                if (junction.getType().equals("traffic_light")) {
+                    tlModel.addElement(junction.getId());
+                } else {
+                    junctionModel.addElement(junction.getId());
+                }
             }
+            
+            System.out.println("Read traffic:" + tlModel);
+            System.out.println("Read junction:" + junctionModel);
         }
     }
 
@@ -256,7 +288,7 @@ public class LightEditor extends JPanel {
                 if (!t.equals("internal")) {
                     filteredJunctions.add(junction);
                 }
-                
+
             }
         }
 
@@ -292,31 +324,31 @@ public class LightEditor extends JPanel {
             System.out.println("Junction list empty, not trying to create traffic lights.");
             return;
         }
-        String commaSeparatedList = "";
-        for (int i = 0; i < ids.size(); i++) {
-            commaSeparatedList = commaSeparatedList + ids.get(i);
-            if (i < ids.size() - 1) {
-                commaSeparatedList = commaSeparatedList + ",";
-            }
-        }
-
+        String commaSeparatedList = listToCSV(ids);
         new Connector(ConnectorType.CONNECTOR_NETCONVERT).runCommand("-s " + networkFile + " --tls.set " + commaSeparatedList + " --output-file=" + networkFile);
     }
 
-    private void removeTrafficLights(List<String> ids) {
-        // If there are no junction IDs specified
-        if (ids.isEmpty()) {
-            System.out.println("Junction list empty, not trying to create traffic lights.");
-            return;
-        }
+    /*
+     * Give a list of strings, create a single string with the list
+     * values separated by commas. Used by netconvert
+     */
+    private String listToCSV(List<String> list) {
         String commaSeparatedList = "";
-        for (int i = 0; i < ids.size(); i++) {
-            commaSeparatedList = commaSeparatedList + ids.get(i);
-            if (i < ids.size() - 1) {
+        for (int i = 0; i < list.size(); i++) {
+            commaSeparatedList = commaSeparatedList + list.get(i);
+            if (i < list.size() - 1) {
                 commaSeparatedList = commaSeparatedList + ",";
             }
         }
+        return commaSeparatedList;
+    }
 
+    /*
+     * Remove the selected traffic lights from the network file
+     * by using netconvert
+     */
+    private void removeTrafficLights(List<String> ids) {
+        String commaSeparatedList = listToCSV(ids);
         new Connector(ConnectorType.CONNECTOR_NETCONVERT).runCommand("-s " + networkFile + " --tls.unset " + commaSeparatedList + " --output-file=" + networkFile);
     }
 

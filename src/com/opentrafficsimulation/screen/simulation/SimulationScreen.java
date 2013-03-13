@@ -9,6 +9,8 @@ import com.opentrafficsimulation.connector.TraciConnector;
 import com.opentrafficsimulation.connector.utility.ConnectorType;
 import com.opentrafficsimulation.editor.road.RoadEditor;
 import com.opentrafficsimulation.gui.CreateMapFrame;
+import com.opentrafficsimulation.gui.CreateSimulationFrame;
+import com.opentrafficsimulation.gui.EditTrafficLights;
 import com.opentrafficsimulation.gui.MainGUI;
 import com.opentrafficsimulation.screen.report.ReportScreen;
 
@@ -31,12 +33,13 @@ public class SimulationScreen {
 
     // Singleton instance
     private static SimulationScreen simulationScreen = new SimulationScreen();
-    public static int SIMULATION_TIME = 100;
-    public static int SIMULATION_BEGIN = 0;
-    public static int SIMULATION_END = 100;
+    public static int SIMULATION_TIME;
+    public static int SIMULATION_BEGIN;
+    public static int SIMULATION_END;
     public int portNumber;
     public TraciConnector traciConnector;
 
+    public EditTrafficLights edt;
     private SimulationScreen() {
     }
 
@@ -108,8 +111,28 @@ public class SimulationScreen {
                 // Output to console for testing
                 transformer.transform(source, result);
 
+                SwingWorker trafficLightWindow = new SwingWorker<String, Object>() {
+                    @Override
+                    public String doInBackground() {
 
-                // Run the simulation with the configuration
+                        edt = new EditTrafficLights();
+                        edt.setVisible(true);
+                        edt.setLocation(30, 30);
+                        
+                        return "running";
+                    }
+
+                    @Override
+                    public void done() {
+                        
+                        
+                    }
+                };
+
+
+                trafficLightWindow.execute();
+                
+
                 // Run the simulation with the configuration		
                 SwingWorker worker = new SwingWorker<String, Object>() {
                     @Override
@@ -129,7 +152,7 @@ public class SimulationScreen {
 
                         String filename = new Connector(ConnectorType.CONNECTOR_NETCONVERT).getOutputDir() + CreateMapFrame.getInstance().netgenerate_file + Integer.toString(portNumber) + ".trip.xml";
                         new ReportScreen(filename);
-                        
+                        edt.dispose();
                     }
                 };
 

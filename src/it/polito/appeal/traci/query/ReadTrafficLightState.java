@@ -31,7 +31,7 @@ public class ReadTrafficLightState extends Query {
 	}
 	
 	public void readTLState() throws IOException {
-		Command cmd = makeReadVarCommand(Constants.CMD_GET_TL_VARIABLE, Constants.TL_RED_YELLOW_GREEN_STATE, "33222");
+		Command cmd = makeReadVarCommand(Constants.CMD_GET_TL_VARIABLE, Constants.TL_RED_YELLOW_GREEN_STATE, id);
 		ResponseContainer respc = queryAndVerifySingle(cmd);
 		Command resp = respc.getResponse();
 		System.out.println("Variable : " + resp.content().readUnsignedByte());
@@ -43,9 +43,9 @@ public class ReadTrafficLightState extends Query {
 	public void chageTLState() throws IOException {
 		Command cmd = new Command(Constants.CMD_SET_TL_VARIABLE);
 		cmd.content().writeUnsignedByte(Constants.DOMVAR_CO2EMISSION);
-		cmd.content().writeStringASCII("33222");
+		cmd.content().writeStringASCII(id);
 		cmd.content().writeUnsignedByte(Constants.TYPE_STRING);
-		cmd.content().writeStringASCII("R");
+		cmd.content().writeStringASCII("RRRRRRRR");
 		ResponseContainer respc = queryAndVerifySingle(cmd);
 		Command resp = respc.getResponse();
 	}
