@@ -7,6 +7,7 @@ import javax.swing.SwingWorker;
 import com.opentrafficsimulation.connector.Connector;
 import com.opentrafficsimulation.connector.TraciConnector;
 import com.opentrafficsimulation.connector.utility.ConnectorType;
+import com.opentrafficsimulation.editor.light.LightEditor;
 import com.opentrafficsimulation.editor.road.RoadEditor;
 import com.opentrafficsimulation.gui.CreateMapFrame;
 import com.opentrafficsimulation.gui.CreateSimulationFrame;
@@ -115,9 +116,11 @@ public class SimulationScreen {
                     @Override
                     public String doInBackground() {
 
+                        if(LightEditor.getInstance().tlModel.size() > 0){
                         edt = new EditTrafficLights();
                         edt.setVisible(true);
                         edt.setLocation(30, 30);
+                        }
                         
                         return "running";
                     }

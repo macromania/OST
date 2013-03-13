@@ -30,8 +30,9 @@ public class TrafficLightReader {
      */
     public ArrayList<Junction> readNetworkFile(String fileName) {
         ArrayList<Junction> junctionList = new ArrayList<Junction>();
+        
         try {
-            Set<String> unset = new HashSet<String>();
+            /*Set<String> unset = new HashSet<String>();
             try {
                 BufferedReader in = new BufferedReader(new FileReader(fileName));
 
@@ -49,7 +50,7 @@ public class TrafficLightReader {
                 }
                 in.close();
             } catch (Exception e) {
-            }
+            }*/
 
             File nodes = new File(fileName);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -73,12 +74,104 @@ public class TrafficLightReader {
 
                 String type = element.getAttribute("type");
                 String id = element.getAttribute("id");
-                if (unset.contains(id)) {
+                junctionList.add(new Junction(id, type));
+                /*if (unset.contains(id)) {
+                    junctionList.add(new Junction(id, "internal"));
+                } else {
+                    junctionList.add(new Junction(id, type));
+                }*/
+            }
+            
+            /*NodeList tlogics = document.getElementsByTagName("tlLogic");
+             for (int i = 0; i < tlogics.getLength(); i++) {
+                Node node = junctionElements.item(i);
+                Element element = (Element) node;
+
+                
+                String type = element.getAttribute("type");
+                String id = element.getAttribute("id");
+                junctionList.add(new Junction(id, "traffic_light"));
+                /*if (unset.contains(id)) {
                     junctionList.add(new Junction(id, "internal"));
                 } else {
                     junctionList.add(new Junction(id, type));
                 }
+            }*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return junctionList;
+    }
+    
+    public ArrayList<Junction> readTLogic(String fileName) {
+        ArrayList<Junction> junctionList = new ArrayList<Junction>();
+        
+        try {
+            /*Set<String> unset = new HashSet<String>();
+            try {
+                BufferedReader in = new BufferedReader(new FileReader(fileName));
+
+                while (in.ready()) {
+                    String s = in.readLine();
+                    if (s != null) {
+                        if (s.contains("tls.unset")) {
+                            Pattern p = Pattern.compile("\"([^\"]*)\"");
+                            Matcher m = p.matcher(s);
+                            while (m.find()) {
+                                unset.add(m.group(1));
+                            }
+                        }
+                    }
+                }
+                in.close();
+            } catch (Exception e) {
+            }*/
+
+            File nodes = new File(fileName);
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document document = dBuilder.parse(nodes);
+            document.getDocumentElement().normalize();
+            NodeList junctionElements = document.getElementsByTagName("tlLogic");
+            for (int i = 0; i < junctionElements.getLength(); i++) {
+                Node node = junctionElements.item(i);
+                Element element = (Element) node;
+
+                /*// Only include junctions where there are links
+                if (element.getAttribute("intLanes").equals("")) {
+                    continue;
+                }
+
+                // Ignore junctions that begin with a colon
+                if (element.getAttribute("id").startsWith(":")) {
+                    continue;
+                }*/
+
+                String type = element.getAttribute("type");
+                String id = element.getAttribute("id");
+                junctionList.add(new Junction(id, type));
+                /*if (unset.contains(id)) {
+                    junctionList.add(new Junction(id, "internal"));
+                } else {
+                    junctionList.add(new Junction(id, type));
+                }*/
             }
+            
+            /*NodeList tlogics = document.getElementsByTagName("tlLogic");
+             for (int i = 0; i < tlogics.getLength(); i++) {
+                Node node = junctionElements.item(i);
+                Element element = (Element) node;
+
+                
+                String type = element.getAttribute("type");
+                String id = element.getAttribute("id");
+                junctionList.add(new Junction(id, "traffic_light"));
+                /*if (unset.contains(id)) {
+                    junctionList.add(new Junction(id, "internal"));
+                } else {
+                    junctionList.add(new Junction(id, type));
+                }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -111,15 +111,15 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
         jListJunctions = new javax.swing.JList();
         jButtonConvertToTrafficLight = new javax.swing.JButton();
         jButtonRemoveTrafficLight = new javax.swing.JButton();
+        jButtonReset = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabelLightCount = new javax.swing.JLabel();
-        jButtonGenerateLights = new javax.swing.JButton();
-        jButtonReset = new javax.swing.JButton();
+        jButtonGenerateRandom = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Create Simulation - Open Traffic Simulation");
         setIconImage(new AssetUtility().getLogo());
-        setPreferredSize(new java.awt.Dimension(660, 560));
+        setPreferredSize(new java.awt.Dimension(680, 560));
         setResizable(false);
 
         jLabelEditVehicles.setBackground(new java.awt.Color(227, 225, 225));
@@ -337,6 +337,14 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
             }
         });
 
+        jButtonReset.setText("Reset");
+        jButtonReset.setEnabled(false);
+        jButtonReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonResetActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -344,10 +352,13 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelTrafficLights)
-                    .addComponent(jButtonRemoveTrafficLight))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jButtonRemoveTrafficLight)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonReset))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonConvertToTrafficLight)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -369,25 +380,18 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonConvertToTrafficLight)
-                    .addComponent(jButtonRemoveTrafficLight))
+                    .addComponent(jButtonRemoveTrafficLight)
+                    .addComponent(jButtonReset))
                 .addGap(6, 6, 6))
         );
 
         jLabelLightCount.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        jLabelLightCount.setText("You haven't created any traffic lights");
+        jLabelLightCount.setText("Click to generate traffic lights randomly.");
 
-        jButtonGenerateLights.setText("Generate Traffic Lights");
-        jButtonGenerateLights.addActionListener(new java.awt.event.ActionListener() {
+        jButtonGenerateRandom.setText("Generate Randomly");
+        jButtonGenerateRandom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonGenerateLightsActionPerformed(evt);
-            }
-        });
-
-        jButtonReset.setText("Reset");
-        jButtonReset.setEnabled(false);
-        jButtonReset.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonResetActionPerformed(evt);
+                jButtonGenerateRandomActionPerformed(evt);
             }
         });
 
@@ -398,21 +402,16 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelLightCount)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jButtonGenerateLights)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonReset, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 20, Short.MAX_VALUE))
+                    .addComponent(jButtonGenerateRandom))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jLabelLightCount)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButtonReset, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                    .addComponent(jButtonGenerateLights, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jButtonGenerateRandom)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -443,7 +442,7 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(61, 61, 61)
                                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 1, Short.MAX_VALUE)))
+                                .addGap(0, 15, Short.MAX_VALUE)))
                         .addGap(10, 10, 10))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jSeparator1)
@@ -531,8 +530,8 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
     }
 
     public void createJunctions() {
-        jButtonGenerateLights.setEnabled(false);
-        jButtonGenerateLights.setText("Generating...");
+        /*jButtonGenerateLights.setEnabled(false);
+        jButtonGenerateLights.setText("Generating...");*/
         SwingWorker worker = new SwingWorker<String, Object>() {
             @Override
             public String doInBackground() {
@@ -545,8 +544,6 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
                 /*jLabelLightCount.setText(LightEditor.getInstance().trafficLightIDs.size() + " junctions have traffic lights created!");
                  System.out.println("generation completed");*/
                 updateLightAndJunctions();
-                jButtonGenerateLights.setText("Generate Traffic Lights");
-                jButtonReset.setEnabled(true);
             }
         };
 
@@ -826,12 +823,9 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_buttonCreateActionPerformed
 
-    private void jButtonGenerateLightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenerateLightsActionPerformed
-    }//GEN-LAST:event_jButtonGenerateLightsActionPerformed
-
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
         jLabelLightCount.setText("You haven't created any traffic lights");
-        jButtonGenerateLights.setEnabled(true);
+        
         jButtonReset.setEnabled(false);
         LightEditor.getInstance().resetLights();
 
@@ -942,16 +936,16 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
             SwingWorker worker = new SwingWorker<String, Object>() {
                 @Override
                 public String doInBackground() {
+                    
                     jButtonRemoveTrafficLight.setEnabled(false);
-                    jButtonRemoveTrafficLight.setText("Removing..");
-                    LightEditor.getInstance().removeTrafficLight(String.valueOf(jListTrafficLights.getSelectedValue()));
+                    String id = String.valueOf(jListTrafficLights.getSelectedValue());
+                    LightEditor.getInstance().removeTrafficLight(id);
                     return "running";
                 }
 
                 @Override
                 public void done() {
                     jButtonRemoveTrafficLight.setEnabled(true);
-                    jButtonRemoveTrafficLight.setText("Remove");
                     updateLightAndJunctions();
                 }
             };
@@ -960,6 +954,29 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_jButtonRemoveTrafficLightActionPerformed
+
+    private void jButtonGenerateRandomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenerateRandomActionPerformed
+        SwingWorker worker = new SwingWorker<String, Object>() {
+                @Override
+                public String doInBackground() {
+                    
+                    jButtonGenerateRandom.setEnabled(false);
+                    jButtonGenerateRandom.setText("Generating");
+                    LightEditor.getInstance().generateRandomly();
+                    return "running";
+                }
+
+                @Override
+                public void done() {
+                    jButtonGenerateRandom.setEnabled(true);
+                    jButtonGenerateRandom.setText("Generate Randomly");
+                    updateLightAndJunctions();
+                    jButtonReset.setEnabled(true);
+                }
+            };
+
+            worker.execute();
+    }//GEN-LAST:event_jButtonGenerateRandomActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1002,7 +1019,7 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonReset;
     private javax.swing.JButton jButtonConvertToTrafficLight;
     private javax.swing.JButton jButtonEditMap;
-    private javax.swing.JButton jButtonGenerateLights;
+    private javax.swing.JButton jButtonGenerateRandom;
     private javax.swing.JButton jButtonPreview;
     private javax.swing.JButton jButtonRemoveTrafficLight;
     private javax.swing.JButton jButtonReset;
@@ -1019,8 +1036,8 @@ public class CreateSimulationFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelLightCount;
     private javax.swing.JLabel jLabelStepSize;
     private javax.swing.JLabel jLabelTrafficLights;
-    private javax.swing.JList jListJunctions;
-    private javax.swing.JList jListTrafficLights;
+    public javax.swing.JList jListJunctions;
+    public javax.swing.JList jListTrafficLights;
     private javax.swing.JList jListVehicles;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;

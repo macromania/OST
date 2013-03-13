@@ -29,6 +29,7 @@ import com.opentrafficsimulation.connector.Connector;
 import com.opentrafficsimulation.connector.utility.ConnectorType;
 import com.opentrafficsimulation.editor.road.RoadEditor;
 import com.opentrafficsimulation.gui.CreateMapFrame;
+import com.opentrafficsimulation.gui.CreateSimulationFrame;
 import com.opentrafficsimulation.screen.simulation.SimulationScreen;
 import com.opentrafficsimulation.utility.constants.AppConstants;
 
@@ -154,6 +155,14 @@ public class LightEditor extends JPanel {
         }
     };
 
+    public void generateRandomly() {
+        ArrayList<Junction> idList = new TrafficLightReader().readNetworkFile(networkFile);
+        List<String> randomIds = getRandomJunctions(idList);
+        trafficLightIDs = randomIds;
+        createTrafficLights(randomIds);
+        readNetworkFile();
+    }
+
     public void triggerGeneration() {
         readNetworkFile();
     }
@@ -168,17 +177,17 @@ public class LightEditor extends JPanel {
     public void convertToTrafficLight(String id) {
 
         /*if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null, "Do you want to add traffic light to this junction?")) {
-            if (isSimulationRunnig) {
-                JOptionPane.showMessageDialog(null, "Please note that the changes will not be reflected during this simulation");
-            }
-            System.out.println("Converting junction " + id + " to traffic light");
-            createTrafficLights(Arrays.asList(id));
-            // Refresh data from the network file
-            readNetworkFile();
-        }*/
+         if (isSimulationRunnig) {
+         JOptionPane.showMessageDialog(null, "Please note that the changes will not be reflected during this simulation");
+         }
+         System.out.println("Converting junction " + id + " to traffic light");
+         createTrafficLights(Arrays.asList(id));
+         // Refresh data from the network file
+         readNetworkFile();
+         }*/
         createTrafficLights(Arrays.asList(id));
-            // Refresh data from the network file
-            readNetworkFile();
+        // Refresh data from the network file
+        readNetworkFile();
     }
 
     public void removeTrafficLight(String id) {
@@ -187,9 +196,11 @@ public class LightEditor extends JPanel {
         readNetworkFile();
     }
 
-    private void clearLists() {        
-        tlModel.clear();        
+    private void clearLists() {
+        tlModel.clear();
         junctionModel.clear();
+        CreateSimulationFrame.getInstance().jListTrafficLights.removeAll();
+        CreateSimulationFrame.getInstance().jListJunctions.removeAll();
         System.out.println("Tlight" + tlModel);
         System.out.println("Junc" + junctionModel);
         System.out.println("---");
@@ -255,19 +266,48 @@ public class LightEditor extends JPanel {
         } else {
             System.out.println("Reading network file " + networkFile + ", refreshing junction and traffic light list");
             clearLists();
-            ArrayList<Junction> idList = new TrafficLightReader().readNetworkFile(networkFile);
-            for (final Junction junction : idList) {
+
+            ArrayList<Junction> tlList = new TrafficLightReader().readTLogic(networkFile);
+            for (final Junction junction : tlList) {
                 String t = junction.getType();
-                if (junction.getType().equals("traffic_light")) {
-                    tlModel.addElement(junction.getId());
-                } else {
-                    junctionModel.addElement(junction.getId());
-                }
+                /*if (junction.getType().equals("traffic_light")) {
+                 tlModel.addElement(junction.getId());
+                 } else {
+                 junctionModel.addElement(junction.getId());
+                 }*/
+                tlModel.addElement(junction.getId());
             }
-            
+
+            ArrayList<Junction> idList = new TrafficLightReader().readNetworkFile(networkFile);
+            for (final Junction junction1 : idList) {
+                String t = junction1.getType();
+                String id = junction1.getId();
+                /*if (junction.getType().equals("traffic_light")) {
+                 tlModel.addElement(junction.getId());
+                 } else {
+                 junctionModel.addElement(junction.getId());
+                 }*/
+                if (findJunction(id)) {
+                    junctionModel.addElement(junction1.getId());
+                }
+
+            }
+
             System.out.println("Read traffic:" + tlModel);
             System.out.println("Read junction:" + junctionModel);
         }
+    }
+
+    private boolean findJunction(String id) {
+        boolean result = true;
+        for (int i = 0; i < tlModel.size(); i++) {
+            String t = String.valueOf(tlModel.get(i));
+            if (t.equals(id)) {
+                result = false;
+                break;
+            }
+        }
+        return result;
     }
 
     /*
@@ -283,13 +323,10 @@ public class LightEditor extends JPanel {
         List<String> ids = new ArrayList<String>();
         List<Junction> filteredJunctions = new ArrayList<Junction>();
         for (Junction junction : junctions) {
-            if (!"traffic_light".equals(junction.getType())) {
-                String t = junction.getType();
-                if (!t.equals("internal")) {
-                    filteredJunctions.add(junction);
-                }
-
-            }
+            /*if (!"traffic_light".equals(junction.getType())) {
+                
+            }*/
+            filteredJunctions.add(junction);
         }
 
         // Check if we have any proper candidates
@@ -300,7 +337,7 @@ public class LightEditor extends JPanel {
         // Pick a random number representing the number of junctions that will be
         // converted into traffic lights. There will be at least one, at most every
         // one.
-        int pickCount = new Random().nextInt(filteredJunctions.size()) + 1;
+        int pickCount = new Random().nextInt(filteredJunctions.size() - 1) + 1;
 
         Collections.shuffle(filteredJunctions);
 
