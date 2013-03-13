@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<<<<<<< HEAD
 <!-- generated on 2013-03-13 10:50:13.528000 by $Id: randomTrips.py 12979 2012-11-14 14:42:19Z namdre $ -->
 <trips>
     <trip id="0" depart="0.00" from="0/2to0/1" to="2/1to2/0" />
@@ -101,4 +102,31 @@
     <trip id="97" depart="97.00" from="2/1to2/0" to="2/2to1/2" />
     <trip id="98" depart="98.00" from="0/2to0/1" to="1/1to1/2" />
     <trip id="99" depart="99.00" from="2/0to1/0" to="0/1to0/0" />
+=======
+<!-- generated on 2013-03-13 11:10:17.925000 by $Id: randomTrips.py 12979 2012-11-14 14:42:19Z namdre $ -->
+<trips>
+    <trip id="0" depart="0.00" from="0/1to0/0" to="0/1to1/1" />
+    <trip id="1" depart="1.00" from="0/1to1/1" to="0/1to1/1" />
+    <trip id="2" depart="2.00" from="1/1to1/0" to="1/1to1/0" />
+    <trip id="3" depart="3.00" from="0/1to1/1" to="1/0to1/1" />
+    <trip id="4" depart="4.00" from="1/0to0/0" to="0/0to1/0" />
+    <trip id="5" depart="5.00" from="1/1to1/0" to="1/0to1/1" />
+    <trip id="6" depart="6.00" from="1/0to1/1" to="0/0to1/0" />
+    <trip id="7" depart="7.00" from="0/0to1/0" to="0/1to0/0" />
+    <trip id="8" depart="8.00" from="0/1to1/1" to="0/0to1/0" />
+    <trip id="9" depart="9.00" from="0/1to1/1" to="1/0to0/0" />
+    <trip id="10" depart="10.00" from="0/0to1/0" to="0/1to1/1" />
+    <trip id="11" depart="11.00" from="0/1to0/0" to="1/1to1/0" />
+    <trip id="12" depart="12.00" from="0/0to1/0" to="0/1to0/0" />
+    <trip id="13" depart="13.00" from="1/1to0/1" to="0/0to1/0" />
+    <trip id="14" depart="14.00" from="1/0to1/1" to="1/1to1/0" />
+    <trip id="15" depart="15.00" from="1/0to0/0" to="0/1to1/1" />
+    <trip id="16" depart="16.00" from="1/0to1/1" to="0/1to1/1" />
+    <trip id="17" depart="17.00" from="1/0to0/0" to="0/1to0/0" />
+    <trip id="18" depart="18.00" from="0/0to1/0" to="0/1to0/0" />
+    <trip id="19" depart="19.00" from="1/0to0/0" to="1/1to1/0" />
+    <trip id="20" depart="20.00" from="0/1to0/0" to="0/0to0/1" />
+    <trip id="21" depart="21.00" from="0/1to0/0" to="0/1to1/1" />
+    <trip id="22" depart="22.00" from="1/0to0/0" to="1/1to0/1" />
+>>>>>>> origin/abdalla
 </trips>

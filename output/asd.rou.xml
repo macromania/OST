@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <routes>
     <vehicle id="0" depart="0.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+<<<<<<< HEAD
         <route edges="0/2to0/1 0/1to1/1 1/1to2/1 2/1to2/0"></route>
     </vehicle>
     <vehicle id="1" depart="1.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
@@ -299,5 +300,74 @@
     </vehicle>
     <vehicle id="99" depart="99.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
         <route edges="2/0to1/0 1/0to1/1 1/1to0/1 0/1to0/0"></route>
+=======
+        <route edges="0/1to0/0 0/0to0/1 0/1to1/1"></route>
+    </vehicle>
+    <vehicle id="1" depart="1.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="0/1to1/1"></route>
+    </vehicle>
+    <vehicle id="2" depart="2.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="1/1to1/0"></route>
+    </vehicle>
+    <vehicle id="3" depart="3.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="0/1to1/1 1/1to1/0 1/0to1/1"></route>
+    </vehicle>
+    <vehicle id="4" depart="4.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="1/0to0/0 0/0to1/0"></route>
+    </vehicle>
+    <vehicle id="5" depart="5.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="1/1to1/0 1/0to1/1"></route>
+    </vehicle>
+    <vehicle id="6" depart="6.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="1/0to1/1 1/1to0/1 0/1to0/0 0/0to1/0"></route>
+    </vehicle>
+    <vehicle id="7" depart="7.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="0/0to1/0 1/0to0/0 0/0to0/1 0/1to0/0"></route>
+    </vehicle>
+    <vehicle id="8" depart="8.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="0/1to1/1 1/1to0/1 0/1to0/0 0/0to1/0"></route>
+    </vehicle>
+    <vehicle id="9" depart="9.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="0/1to1/1 1/1to1/0 1/0to0/0"></route>
+    </vehicle>
+    <vehicle id="10" depart="10.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="0/0to1/0 1/0to0/0 0/0to0/1 0/1to1/1"></route>
+    </vehicle>
+    <vehicle id="11" depart="11.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="0/1to0/0 0/0to0/1 0/1to1/1 1/1to1/0"></route>
+    </vehicle>
+    <vehicle id="12" depart="12.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="0/0to1/0 1/0to0/0 0/0to0/1 0/1to0/0"></route>
+    </vehicle>
+    <vehicle id="13" depart="13.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="1/1to0/1 0/1to0/0 0/0to1/0"></route>
+    </vehicle>
+    <vehicle id="14" depart="14.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="1/0to1/1 1/1to1/0"></route>
+    </vehicle>
+    <vehicle id="15" depart="15.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="1/0to0/0 0/0to0/1 0/1to1/1"></route>
+    </vehicle>
+    <vehicle id="16" depart="16.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="1/0to1/1 1/1to0/1 0/1to1/1"></route>
+    </vehicle>
+    <vehicle id="17" depart="17.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="1/0to0/0 0/0to0/1 0/1to0/0"></route>
+    </vehicle>
+    <vehicle id="18" depart="18.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="0/0to1/0 1/0to0/0 0/0to0/1 0/1to0/0"></route>
+    </vehicle>
+    <vehicle id="19" depart="19.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="1/0to0/0 0/0to0/1 0/1to1/1 1/1to1/0"></route>
+    </vehicle>
+    <vehicle id="20" depart="20.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="0/1to0/0 0/0to0/1"></route>
+    </vehicle>
+    <vehicle id="21" depart="21.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="0/1to0/0 0/0to0/1 0/1to1/1"></route>
+    </vehicle>
+    <vehicle id="22" depart="22.00" maxSpeed="100" vType="Private" color="0,180,255" guiShape="evehicle">
+        <route edges="1/0to0/0 0/0to0/1 0/1to1/1 1/1to0/1"></route>
+>>>>>>> origin/abdalla
     </vehicle>
 </routes>

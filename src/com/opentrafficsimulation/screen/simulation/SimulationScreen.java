@@ -13,20 +13,18 @@ import com.opentrafficsimulation.gui.CreateMapFrame;
 import com.opentrafficsimulation.gui.CreateSimulationFrame;
 import com.opentrafficsimulation.gui.EditTrafficLights;
 import com.opentrafficsimulation.gui.MainGUI;
+import com.opentrafficsimulation.screen.report.EmissionScreen;
 import com.opentrafficsimulation.screen.report.ReportScreen;
 
 import java.awt.Dimension;
 import java.io.File;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -152,10 +150,11 @@ public class SimulationScreen {
                     @Override
                     public void done() {
                         System.out.println("simalation screen closed / simulation completed");
-
+                        String emissionFilename = new Connector(ConnectorType.CONNECTOR_NETCONVERT).getOutputDir() + CreateMapFrame.getInstance().netgenerate_file + Integer.toString(portNumber) + ".emission.xml";
                         String filename = new Connector(ConnectorType.CONNECTOR_NETCONVERT).getOutputDir() + CreateMapFrame.getInstance().netgenerate_file + Integer.toString(portNumber) + ".trip.xml";
                         new ReportScreen(filename);
                         edt.dispose();
+                        new EmissionScreen(emissionFilename);
                     }
                 };
 
