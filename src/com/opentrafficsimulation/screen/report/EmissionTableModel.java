@@ -26,22 +26,22 @@ public class EmissionTableModel extends AbstractTableModel {
 		EmissionInfo emissionInfo = list.get(arg0);
 		switch(arg1) {
 			case 0: return emissionInfo.id;
-			case 1: return emissionInfo.depart;
-			case 2: return emissionInfo.departLane;
-			case 3: return emissionInfo.departPos;
-			case 4: return emissionInfo.departSpeed;
-			case 5: return emissionInfo.departDelay;
-			case 6: return emissionInfo.arrival;
-			case 7: return emissionInfo.arrivalLane;
-			case 8: return emissionInfo.arrivalPos;
-			case 9: return emissionInfo.arrivalSpeed;
-			case 10: return emissionInfo.duration;
-			case 11: return emissionInfo.routeLength;
-			case 12: return emissionInfo.waitSteps;
-			case 13: return emissionInfo.rerouteNo;
-			case 14: return emissionInfo.devices;
-			case 15: return emissionInfo.vType;
-			case 16: return emissionInfo.vaporized;
+			case 1: return emissionInfo.eclass;
+			case 2: return emissionInfo.co2;
+			case 3: return emissionInfo.co;
+			case 4: return emissionInfo.hc;
+			case 5: return emissionInfo.nox;
+			case 6: return emissionInfo.pmx;
+			case 7: return emissionInfo.noise;
+			case 8: return emissionInfo.route;
+			case 9: return emissionInfo.type;
+			case 10: return emissionInfo.waiting;
+			case 11: return emissionInfo.lane;
+			case 12: return emissionInfo.pos;
+			case 13: return emissionInfo.speed;
+			case 14: return emissionInfo.angle;
+			case 15: return emissionInfo.x;
+                        case 16: return emissionInfo.y;
 		}
 		return null;
 	}
