@@ -9,6 +9,7 @@ import com.opentrafficsimulation.gui.MainFrame;
 import com.opentrafficsimulation.utility.data.DBConnector;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.jfree.chart.JFreeChart;
 
 /**
  *
@@ -46,7 +47,6 @@ public class Main {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-
                 try {
                     // Set makes the program use the System L&F
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
